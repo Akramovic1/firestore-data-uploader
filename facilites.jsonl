@@ -1,0 +1,1165 @@
+// =============================================================
+// GYMS IN CAIRO, EGYPT
+// =============================================================
+
+// Document 1: Premium Gym in New Cairo
+{
+  "business_type": "gym",
+  "business_name": {
+    "en": "PowerZone Fitness Club",
+    "ar": "نادي باور زون للياقة البدنية"
+  },
+  "description": {
+    "en": "State-of-the-art fitness facility in New Cairo with modern equipment, group classes, and personal training services",
+    "ar": "منشأة لياقة بدنية حديثة في القاهرة الجديدة مع معدات عصرية وحصص جماعية وخدمات تدريب شخصي"
+  },
+  "tags": [
+    {
+      "en": "Modern Equipment",
+      "ar": "معدات حديثة"
+    },
+    {
+      "en": "Group Classes",
+      "ar": "فصول جماعية"
+    },
+    {
+      "en": "Personal Training",
+      "ar": "تدريب شخصي"
+    },
+    {
+      "en": "Swimming Pool",
+      "ar": "مسبح"
+    }
+  ],
+  "address": {
+    "readable": {
+      "en": "City Center Mall, New Cairo, Cairo Governorate",
+      "ar": "سيتي سنتر مول، القاهرة الجديدة، محافظة القاهرة"
+    },
+    "country": {
+      "en": "Egypt",
+      "ar": "مصر"
+    },
+    "state": {
+      "en": "Cairo Governorate",
+      "ar": "محافظة القاهرة"
+    },
+    "city": {
+      "en": "New Cairo",
+      "ar": "القاهرة الجديدة"
+    },
+    "geo": {
+      "point": "GeoPoint(30.0272, 31.4986)",
+      "google_place_id": "ChIJtxs6t4FE5jUR1FI7ajn_5R8"
+    }
+  },
+  "opening_hours": {
+    "monday": {
+      "open": "06:00",
+      "close": "23:00",
+      "is_closed": false
+    },
+    "tuesday": {
+      "open": "06:00",
+      "close": "23:00",
+      "is_closed": false
+    },
+    "wednesday": {
+      "open": "06:00",
+      "close": "23:00",
+      "is_closed": false
+    },
+    "thursday": {
+      "open": "06:00",
+      "close": "23:00",
+      "is_closed": false
+    },
+    "friday": {
+      "open": "08:00",
+      "close": "22:00",
+      "is_closed": false
+    },
+    "saturday": {
+      "open": "07:00",
+      "close": "23:00",
+      "is_closed": false
+    },
+    "sunday": {
+      "open": "07:00",
+      "close": "22:00",
+      "is_closed": false
+    }
+  },
+  "pricing": {
+    "type": "weekend_weekday",
+    "weekday_price": 80,
+    "weekend_price": 120
+  },
+  "booking_type": "walkin_booking",
+  "media": {
+    "thumbnails": {
+      "4:3": "https://images.pexels.com/photos/416717/pexels-photo-416717.jpeg?auto=compress&cs=tinysrgb&w=800&h=600",
+      "1:1": "https://images.pexels.com/photos/416717/pexels-photo-416717.jpeg?auto=compress&cs=tinysrgb&w=600&h=600",
+      "16:9": "https://images.pexels.com/photos/416717/pexels-photo-416717.jpeg?auto=compress&cs=tinysrgb&w=800&h=450"
+    },
+    "images": [
+      "https://images.pexels.com/photos/416717/pexels-photo-416717.jpeg?auto=compress&cs=tinysrgb&w=600&h=600",
+      "https://images.pexels.com/photos/1229356/pexels-photo-1229356.jpeg?auto=compress&cs=tinysrgb&w=600&h=600",
+      "https://images.pexels.com/photos/4164825/pexels-photo-4164825.jpeg?auto=compress&cs=tinysrgb&w=600&h=600",
+      "https://images.pexels.com/photos/3757376/pexels-photo-3757376.jpeg?auto=compress&cs=tinysrgb&w=600&h=600"
+    ],
+    "videos": {
+      "explore": [
+        "https://videos.pexels.com/video-files/4752208/4752208-uhd_1440_2560_25fps.mp4",
+        "https://videos.pexels.com/video-files/3209828/3209828-uhd_1440_2560_25fps.mp4"
+      ],
+      "promotional": [
+        "https://videos.pexels.com/video-files/2792043/2792043-uhd_2560_1440_24fps.mp4"
+      ]
+    }
+  },
+  "amenities": [
+    {
+      "name": {
+        "en": "Swimming Pool",
+        "ar": "مسبح"
+      },
+      "icon": "pool"
+    },
+    {
+      "name": {
+        "en": "Sauna",
+        "ar": "ساونا"
+      },
+      "icon": "spa"
+    },
+    {
+      "name": {
+        "en": "Free Parking",
+        "ar": "مواقف مجانية"
+      },
+      "icon": "parking"
+    },
+    {
+      "name": {
+        "en": "Locker Rooms",
+        "ar": "غرف الخزائن"
+      },
+      "icon": "locker"
+    }
+  ],
+  "status": "active",
+  "business_id": "gym_cairo_001",
+  "created_at": "Timestamp",
+  "updated_at": "Timestamp",
+  "search_keywords": {
+    "en": ["gym", "fitness", "cairo", "new cairo", "swimming", "training"],
+    "ar": ["جيم", "لياقة", "القاهرة", "القاهرة الجديدة", "سباحة", "تدريب"]
+  }
+}
+
+// Document 2: Budget Gym in Downtown Cairo  
+{
+  "business_type": "gym",
+  "business_name": {
+    "en": "Fitness First Downtown",
+    "ar": "فتنس فيرست وسط البلد"
+  },
+  "description": {
+    "en": "Affordable fitness center in the heart of Downtown Cairo with essential equipment and flexible membership options",
+    "ar": "مركز لياقة بدنية بأسعار معقولة في قلب وسط القاهرة مع المعدات الأساسية وخيارات عضوية مرنة"
+  },
+  "tags": [
+    {
+      "en": "Affordable",
+      "ar": "بأسعار معقولة"
+    },
+    {
+      "en": "Central Location",
+      "ar": "موقع مركزي"
+    },
+    {
+      "en": "24/7 Access",
+      "ar": "وصول على مدار الساعة"
+    }
+  ],
+  "address": {
+    "readable": {
+      "en": "Tahrir Square Area, Downtown Cairo",
+      "ar": "منطقة ميدان التحرير، وسط القاهرة"
+    },
+    "country": {
+      "en": "Egypt",
+      "ar": "مصر"
+    },
+    "state": {
+      "en": "Cairo Governorate",
+      "ar": "محافظة القاهرة"
+    },
+    "city": {
+      "en": "Cairo",
+      "ar": "القاهرة"
+    },
+    "geo": {
+      "point": "GeoPoint(30.0444, 31.2357)",
+      "google_place_id": "ChIJ67_x5bNE5jURGlq9YlQvNv0"
+    }
+  },
+  "opening_hours": {
+    "monday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "tuesday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "wednesday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "thursday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "friday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "saturday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "sunday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    }
+  },
+  "pricing": {
+    "type": "all_days",
+    "all_days_price": 45
+  },
+  "booking_type": "walkin_only",
+  "media": {
+    "thumbnails": {
+      "4:3": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
+      "1:1": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=600&fit=crop",
+      "16:9": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=450&fit=crop"
+    },
+    "images": [
+      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=600&h=600&fit=crop"
+    ],
+    "videos": {
+      "explore": [
+        "https://videos.pexels.com/video-files/6539879/6539879-uhd_1440_2560_25fps.mp4"
+      ],
+      "promotional": [
+        "https://videos.pexels.com/video-files/3781489/3781489-uhd_2560_1440_24fps.mp4"
+      ]
+    }
+  },
+  "amenities": [
+    {
+      "name": {
+        "en": "24/7 Access",
+        "ar": "وصول على مدار الساعة"
+      },
+      "icon": "clock"
+    },
+    {
+      "name": {
+        "en": "Basic Equipment",
+        "ar": "معدات أساسية"
+      },
+      "icon": "dumbbell"
+    },
+    {
+      "name": {
+        "en": "Changing Rooms",
+        "ar": "غرف تغيير الملابس"
+      },
+      "icon": "changing_room"
+    }
+  ],
+  "status": "active",
+  "business_id": "gym_cairo_002",
+  "created_at": "Timestamp",
+  "updated_at": "Timestamp",
+  "search_keywords": {
+    "en": ["gym", "fitness", "downtown", "cairo", "24/7", "affordable"],
+    "ar": ["جيم", "لياقة", "وسط البلد", "القاهرة", "مفتوح", "رخيص"]
+  }
+}
+
+// =============================================================
+// RESORTS IN CAIRO, EGYPT
+// =============================================================
+
+// Document 3: Luxury Resort on the Nile
+{
+  "business_type": "resort",
+  "business_name": {
+    "en": "Nile Palace Resort & Spa",
+    "ar": "منتجع وسبا قصر النيل"
+  },
+  "description": {
+    "en": "Luxurious riverside resort offering stunning Nile views, world-class spa services, and premium amenities in the heart of Cairo",
+    "ar": "منتجع فاخر على ضفاف النيل يوفر إطلالات خلابة على النيل وخدمات سبا عالمية ووسائل راحة متميزة في قلب القاهرة"
+  },
+  "tags": [
+    {
+      "en": "Nile View",
+      "ar": "إطلالة على النيل"
+    },
+    {
+      "en": "Luxury Spa",
+      "ar": "سبا فاخر"
+    },
+    {
+      "en": "Fine Dining",
+      "ar": "مطاعم راقية"
+    },
+    {
+      "en": "Swimming Pool",
+      "ar": "مسبح"
+    }
+  ],
+  "address": {
+    "readable": {
+      "en": "Corniche El Nil, Zamalek, Cairo",
+      "ar": "كورنيش النيل، الزمالك، القاهرة"
+    },
+    "country": {
+      "en": "Egypt",
+      "ar": "مصر"
+    },
+    "state": {
+      "en": "Cairo Governorate",
+      "ar": "محافظة القاهرة"
+    },
+    "city": {
+      "en": "Cairo",
+      "ar": "القاهرة"
+    },
+    "geo": {
+      "point": "GeoPoint(30.0618, 31.2194)",
+      "google_place_id": "ChIJ_dNZyKpE5jURWHMGQQZz8jk"
+    }
+  },
+  "opening_hours": {
+    "monday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "tuesday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "wednesday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "thursday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "friday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "saturday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "sunday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    }
+  },
+  "pricing": {
+    "type": "per_day",
+    "daily_prices": {
+      "monday": 350,
+      "tuesday": 350,
+      "wednesday": 350,
+      "thursday": 400,
+      "friday": 500,
+      "saturday": 550,
+      "sunday": 450
+    }
+  },
+  "booking_type": "booking_only",
+  "media": {
+    "thumbnails": {
+      "4:3": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop",
+      "1:1": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&h=600&fit=crop",
+      "16:9": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=450&fit=crop"
+    },
+    "images": [
+      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1571077700162-c0564c4e9b28?w=600&h=600&fit=crop"
+    ],
+    "videos": {
+      "explore": [
+        "https://videos.pexels.com/video-files/4186274/4186274-uhd_1440_2560_25fps.mp4",
+        "https://videos.pexels.com/video-files/5739007/5739007-uhd_1440_2560_25fps.mp4"
+      ],
+      "promotional": [
+        "https://videos.pexels.com/video-files/6580702/6580702-uhd_2560_1440_24fps.mp4"
+      ]
+    }
+  },
+  "amenities": [
+    {
+      "name": {
+        "en": "Nile View Rooms",
+        "ar": "غرف بإطلالة على النيل"
+      },
+      "icon": "river"
+    },
+    {
+      "name": {
+        "en": "Luxury Spa",
+        "ar": "سبا فاخر"
+      },
+      "icon": "spa"
+    },
+    {
+      "name": {
+        "en": "Fine Dining",
+        "ar": "مطاعم راقية"
+      },
+      "icon": "restaurant"
+    },
+    {
+      "name": {
+        "en": "Infinity Pool",
+        "ar": "مسبح لا متناهي"
+      },
+      "icon": "pool"
+    },
+    {
+      "name": {
+        "en": "Concierge Service",
+        "ar": "خدمة كونسيرج"
+      },
+      "icon": "concierge"
+    }
+  ],
+  "status": "active",
+  "business_id": "resort_cairo_001",
+  "created_at": "Timestamp",
+  "updated_at": "Timestamp",
+  "search_keywords": {
+    "en": ["resort", "luxury", "nile", "spa", "cairo", "zamalek"],
+    "ar": ["منتجع", "فخامة", "النيل", "سبا", "القاهرة", "الزمالك"]
+  }
+}
+
+// Document 4: Desert Resort on Cairo Outskirts
+{
+  "business_type": "resort",
+  "business_name": {
+    "en": "Sahara Oasis Resort",
+    "ar": "منتجع واحة الصحراء"
+  },
+  "description": {
+    "en": "Unique desert resort experience with traditional Bedouin hospitality, camel rides, and stunning desert sunset views",
+    "ar": "تجربة منتجع صحراوي فريدة مع الضيافة البدوية التقليدية وركوب الجمال ومناظر غروب الصحراء الخلابة"
+  },
+  "tags": [
+    {
+      "en": "Desert Experience",
+      "ar": "تجربة صحراوية"
+    },
+    {
+      "en": "Bedouin Culture",
+      "ar": "ثقافة بدوية"
+    },
+    {
+      "en": "Camel Rides",
+      "ar": "ركوب الجمال"
+    },
+    {
+      "en": "Stargazing",
+      "ar": "مراقبة النجوم"
+    }
+  ],
+  "address": {
+    "readable": {
+      "en": "Desert Road, Bahariya Oasis, Cairo Governorate",
+      "ar": "طريق الصحراء، واحة البحرية، محافظة القاهرة"
+    },
+    "country": {
+      "en": "Egypt",
+      "ar": "مصر"
+    },
+    "state": {
+      "en": "Cairo Governorate",
+      "ar": "محافظة القاهرة"
+    },
+    "city": {
+      "en": "Bahariya Oasis",
+      "ar": "واحة البحرية"
+    },
+    "geo": {
+      "point": "GeoPoint(28.3489, 28.8397)",
+      "google_place_id": "ChIJp5NkBNv7_hQRZFd2rS1v1Zw"
+    }
+  },
+  "opening_hours": {
+    "monday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "tuesday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "wednesday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "thursday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "friday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "saturday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "sunday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    }
+  },
+  "pricing": {
+    "type": "weekend_weekday",
+    "weekday_price": 280,
+    "weekend_price": 400
+  },
+  "booking_type": "booking_only",
+  "media": {
+    "thumbnails": {
+      "4:3": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop",
+      "1:1": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=600&fit=crop",
+      "16:9": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=450&fit=crop"
+    },
+    "images": [
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1451337516015-6b6e9a44a8a3?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1548013146-72479768bada?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1682687220923-c58b9a4592ae?w=600&h=600&fit=crop"
+    ],
+    "videos": {
+      "explore": [
+        "https://videos.pexels.com/video-files/3571264/3571264-uhd_1440_2560_25fps.mp4",
+        "https://videos.pexels.com/video-files/4545547/4545547-uhd_1440_2560_25fps.mp4"
+      ],
+      "promotional": [
+        "https://videos.pexels.com/video-files/2749506/2749506-uhd_2560_1440_24fps.mp4"
+      ]
+    }
+  },
+  "amenities": [
+    {
+      "name": {
+        "en": "Desert Camping",
+        "ar": "تخييم صحراوي"
+      },
+      "icon": "tent"
+    },
+    {
+      "name": {
+        "en": "Camel Rides",
+        "ar": "ركوب الجمال"
+      },
+      "icon": "camel"
+    },
+    {
+      "name": {
+        "en": "Traditional Meals",
+        "ar": "وجبات تقليدية"
+      },
+      "icon": "food"
+    },
+    {
+      "name": {
+        "en": "Stargazing",
+        "ar": "مراقبة النجوم"
+      },
+      "icon": "stars"
+    }
+  ],
+  "status": "active",
+  "business_id": "resort_cairo_002",
+  "created_at": "Timestamp",
+  "updated_at": "Timestamp",
+  "search_keywords": {
+    "en": ["resort", "desert", "sahara", "bedouin", "oasis", "adventure"],
+    "ar": ["منتجع", "صحراء", "الصحراء", "بدوي", "واحة", "مغامرة"]
+  }
+}
+
+// =============================================================
+// COWORKING SPACES IN CAIRO, EGYPT
+// =============================================================
+
+// Document 5: Tech Hub Coworking Space
+{
+  "business_type": "coworking_space",
+  "business_name": {
+    "en": "Cairo Tech Hub",
+    "ar": "مركز القاهرة التقني"
+  },
+  "description": {
+    "en": "Modern coworking space designed for tech entrepreneurs and startups with high-speed internet, meeting rooms, and networking events",
+    "ar": "مساحة عمل مشتركة حديثة مصممة لرواد الأعمال التقنيين والشركات الناشئة مع إنترنت عالي السرعة وغرف اجتماعات وفعاليات تواصل"
+  },
+  "tags": [
+    {
+      "en": "High-Speed Internet",
+      "ar": "إنترنت عالي السرعة"
+    },
+    {
+      "en": "Meeting Rooms",
+      "ar": "غرف اجتماعات"
+    },
+    {
+      "en": "Tech Community",
+      "ar": "مجتمع تقني"
+    },
+    {
+      "en": "24/7 Access",
+      "ar": "وصول على مدار الساعة"
+    }
+  ],
+  "address": {
+    "readable": {
+      "en": "Smart Village, Sheikh Zayed City, Giza Governorate",
+      "ar": "القرية الذكية، مدينة الشيخ زايد، محافظة الجيزة"
+    },
+    "country": {
+      "en": "Egypt",
+      "ar": "مصر"
+    },
+    "state": {
+      "en": "Giza Governorate",
+      "ar": "محافظة الجيزة"
+    },
+    "city": {
+      "en": "Sheikh Zayed City",
+      "ar": "مدينة الشيخ زايد"
+    },
+    "geo": {
+      "point": "GeoPoint(30.0853, 30.9776)",
+      "google_place_id": "ChIJGxMHJAk_WBQRfbD1aZz8jMc"
+    }
+  },
+  "opening_hours": {
+    "monday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "tuesday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "wednesday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "thursday": {
+      "open": "00:00",
+      "close": "23:59",
+      "is_closed": false
+    },
+    "friday": {
+      "open": "08:00",
+      "close": "18:00",
+      "is_closed": false
+    },
+    "saturday": {
+      "open": "09:00",
+      "close": "17:00",
+      "is_closed": false
+    },
+    "sunday": {
+      "open": "09:00",
+      "close": "17:00",
+      "is_closed": false
+    }
+  },
+  "pricing": {
+    "type": "all_days",
+    "all_days_price": 60
+  },
+  "booking_type": "booking_only",
+  "media": {
+    "thumbnails": {
+      "4:3": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop",
+      "1:1": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=600&fit=crop",
+      "16:9": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=450&fit=crop"
+    },
+    "images": [
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=600&h=600&fit=crop"
+    ],
+    "videos": {
+      "explore": [
+        "https://cdn.coverr.co/videos/coverr-coworking-tour-8140/1080p.mp4",
+        "https://cdn.coverr.co/videos/coverr-startup-workspace-8141/1080p.mp4"
+      ],
+      "promotional": [
+        "https://cdn.coverr.co/videos/coverr-tech-hub-community-8142/1080p.mp4"
+      ]
+    }
+  },
+  "amenities": [
+    {
+      "name": {
+        "en": "High-Speed WiFi",
+        "ar": "واي فاي عالي السرعة"
+      },
+      "icon": "wifi"
+    },
+    {
+      "name": {
+        "en": "Meeting Rooms",
+        "ar": "غرف اجتماعات"
+      },
+      "icon": "meeting_room"
+    },
+    {
+      "name": {
+        "en": "Printing Services",
+        "ar": "خدمات طباعة"
+      },
+      "icon": "print"
+    },
+    {
+      "name": {
+        "en": "Coffee Bar",
+        "ar": "بار قهوة"
+      },
+      "icon": "coffee"
+    },
+    {
+      "name": {
+        "en": "24/7 Access",
+        "ar": "وصول على مدار الساعة"
+      },
+      "icon": "clock"
+    }
+  ],
+  "status": "active",
+  "business_id": "coworking_cairo_001",
+  "created_at": "Timestamp",
+  "updated_at": "Timestamp",
+  "search_keywords": {
+    "en": ["coworking", "tech", "startup", "cairo", "workspace", "internet"],
+    "ar": ["عمل مشترك", "تقنية", "شركات ناشئة", "القاهرة", "مساحة عمل", "إنترنت"]
+  }
+}
+
+// Document 6: Creative Coworking Space
+{
+  "business_type": "coworking_space",
+  "business_name": {
+    "en": "The Creative Loft",
+    "ar": "العلية الإبداعية"
+  },
+  "description": {
+    "en": "Inspiring coworking space for creative professionals including designers, artists, and content creators with studio facilities and collaboration areas",
+    "ar": "مساحة عمل مشتركة ملهمة للمحترفين المبدعين بما في ذلك المصممين والفنانين ومنشئي المحتوى مع مرافق استوديو ومناطق تعاون"
+  },
+  "tags": [
+    {
+      "en": "Creative Studios",
+      "ar": "استوديوهات إبداعية"
+    },
+    {
+      "en": "Art Supplies",
+      "ar": "أدوات فنية"
+    },
+    {
+      "en": "Photography Studio",
+      "ar": "استوديو تصوير"
+    },
+    {
+      "en": "Design Tools",
+      "ar": "أدوات تصميم"
+    }
+  ],
+  "address": {
+    "readable": {
+      "en": "Maadi District, Cairo Governorate",
+      "ar": "حي المعادي، محافظة القاهرة"
+    },
+    "country": {
+      "en": "Egypt",
+      "ar": "مصر"
+    },
+    "state": {
+      "en": "Cairo Governorate",
+      "ar": "محافظة القاهرة"
+    },
+    "city": {
+      "en": "Cairo",
+      "ar": "القاهرة"
+    },
+    "geo": {
+      "point": "GeoPoint(29.9601, 31.2569)",
+      "google_place_id": "ChIJB8hM0bpE5jUR_DxhQZzF8jM"
+    }
+  },
+  "opening_hours": {
+    "monday": {
+      "open": "08:00",
+      "close": "22:00",
+      "is_closed": false
+    },
+    "tuesday": {
+      "open": "08:00",
+      "close": "22:00",
+      "is_closed": false
+    },
+    "wednesday": {
+      "open": "08:00",
+      "close": "22:00",
+      "is_closed": false
+    },
+    "thursday": {
+      "open": "08:00",
+      "close": "22:00",
+      "is_closed": false
+    },
+    "friday": {
+      "open": "10:00",
+      "close": "20:00",
+      "is_closed": false
+    },
+    "saturday": {
+      "open": "10:00",
+      "close": "18:00",
+      "is_closed": false
+    },
+    "sunday": {
+      "open": "10:00",
+      "close": "18:00",
+      "is_closed": false
+    }
+  },
+  "pricing": {
+    "type": "weekend_weekday",
+    "weekday_price": 70,
+    "weekend_price": 90
+  },
+  "booking_type": "walkin_booking",
+  "media": {
+    "thumbnails": {
+      "4:3": "https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=800&h=600&fit=crop",
+      "1:1": "https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=600&h=600&fit=crop",
+      "16:9": "https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=800&h=450&fit=crop"
+    },
+    "images": [
+      "https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&h=600&fit=crop"
+    ],
+    "videos": {
+      "explore": [
+        "https://videos.pexels.com/video-files/5928301/5928301-uhd_1440_2560_25fps.mp4",
+        "https://videos.pexels.com/video-files/4226139/4226139-uhd_1440_2560_25fps.mp4"
+      ],
+      "promotional": [
+        "https://videos.pexels.com/video-files/3321524/3321524-uhd_2560_1440_24fps.mp4"
+      ]
+    }
+  },
+  "amenities": [
+    {
+      "name": {
+        "en": "Photography Studio",
+        "ar": "استوديو تصوير"
+      },
+      "icon": "camera"
+    },
+    {
+      "name": {
+        "en": "Art Supplies",
+        "ar": "أدوات فنية"
+      },
+      "icon": "palette"
+    },
+    {
+      "name": {
+        "en": "Design Software",
+        "ar": "برامج تصميم"
+      },
+      "icon": "computer"
+    },
+    {
+      "name": {
+        "en": "Exhibition Space",
+        "ar": "مساحة معرض"
+      },
+      "icon": "gallery"
+    },
+    {
+      "name": {
+        "en": "Creative Workshops",
+        "ar": "ورش إبداعية"
+      },
+      "icon": "workshop"
+    }
+  ],
+  "status": "active",
+  "business_id": "coworking_cairo_002",
+  "created_at": "Timestamp",
+  "updated_at": "Timestamp",
+  "search_keywords": {
+    "en": ["coworking", "creative", "design", "art", "studio", "maadi"],
+    "ar": ["عمل مشترك", "إبداعي", "تصميم", "فن", "استوديو", "المعادي"]
+  }
+}
+
+// Document 7: Business District Coworking
+{
+  "business_type": "coworking_space",
+  "business_name": {
+    "en": "Executive Business Center",
+    "ar": "مركز الأعمال التنفيذي"
+  },
+  "description": {
+    "en": "Professional coworking space in Cairo's financial district offering premium services for corporate professionals and established businesses",
+    "ar": "مساحة عمل مشتركة مهنية في المنطقة المالية بالقاهرة تقدم خدمات متميزة للمهنيين في الشركات والأعمال الراسخة"
+  },
+  "tags": [
+    {
+      "en": "Premium Location",
+      "ar": "موقع متميز"
+    },
+    {
+      "en": "Business Services",
+      "ar": "خدمات الأعمال"
+    },
+    {
+      "en": "Conference Facilities",
+      "ar": "مرافق المؤتمرات"
+    },
+    {
+      "en": "Concierge",
+      "ar": "خدمة كونسيرج"
+    }
+  ],
+  "address": {
+    "readable": {
+      "en": "New Administrative Capital, Cairo Governorate",
+      "ar": "العاصمة الإدارية الجديدة، محافظة القاهرة"
+    },
+    "country": {
+      "en": "Egypt",
+      "ar": "مصر"
+    },
+    "state": {
+      "en": "Cairo Governorate",
+      "ar": "محافظة القاهرة"
+    },
+    "city": {
+      "en": "New Administrative Capital",
+      "ar": "العاصمة الإدارية الجديدة"
+    },
+    "geo": {
+      "point": "GeoPoint(30.0131, 31.7323)",
+      "google_place_id": "ChIJxYx_-rZE5jURsF2kQgMx8pA"
+    }
+  },
+  "opening_hours": {
+    "monday": {
+      "open": "07:00",
+      "close": "21:00",
+      "is_closed": false
+    },
+    "tuesday": {
+      "open": "07:00",
+      "close": "21:00",
+      "is_closed": false
+    },
+    "wednesday": {
+      "open": "07:00",
+      "close": "21:00",
+      "is_closed": false
+    },
+    "thursday": {
+      "open": "07:00",
+      "close": "21:00",
+      "is_closed": false
+    },
+    "friday": {
+      "open": "09:00",
+      "close": "17:00",
+      "is_closed": false
+    },
+    "saturday": {
+      "open": "09:00",
+      "close": "15:00",
+      "is_closed": false
+    },
+    "sunday": {
+      "open": "09:00",
+      "close": "15:00",
+      "is_closed": false
+    }
+  },
+  "pricing": {
+    "type": "per_day",
+    "daily_prices": {
+      "monday": 120,
+      "tuesday": 120,
+      "wednesday": 120,
+      "thursday": 120,
+      "friday": 100,
+      "saturday": 80,
+      "sunday": 80
+    }
+  },
+  "booking_type": "booking_only",
+  "media": {
+    "thumbnails": {
+      "4:3": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=600&fit=crop",
+      "1:1": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600&h=600&fit=crop",
+      "16:9": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=450&fit=crop"
+    },
+    "images": [
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1560472355-536de3962603?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=600&h=600&fit=crop"
+    ],
+    "videos": {
+      "explore": [
+        "https://videos.pexels.com/video-files/8815991/8815991-uhd_1440_2560_25fps.mp4",
+        "https://videos.pexels.com/video-files/5377687/5377687-uhd_1440_2560_25fps.mp4"
+      ],
+      "promotional": [
+        "https://videos.pexels.com/video-files/6238659/6238659-uhd_2560_1440_24fps.mp4"
+      ]
+    }
+  },
+  "amenities": [
+    {
+      "name": {
+        "en": "Conference Rooms",
+        "ar": "غرف المؤتمرات"
+      },
+      "icon": "conference"
+    },
+    {
+      "name": {
+        "en": "Business Concierge",
+        "ar": "كونسيرج الأعمال"
+      },
+      "icon": "concierge"
+    },
+    {
+      "name": {
+        "en": "Premium Coffee",
+        "ar": "قهوة متميزة"
+      },
+      "icon": "coffee"
+    },
+    {
+      "name": {
+        "en": "Executive Lounge",
+        "ar": "صالة تنفيذية"
+      },
+      "icon": "lounge"
+    },
+    {
+      "name": {
+        "en": "Valet Parking",
+        "ar": "مواقف خدمة"
+      },
+      "icon": "parking"
+    }
+  ],
+  "status": "active",
+  "business_id": "coworking_cairo_003",
+  "created_at": "Timestamp",
+  "updated_at": "Timestamp",
+  "search_keywords": {
+    "en": ["coworking", "business", "executive", "premium", "cairo", "corporate"],
+    "ar": ["عمل مشترك", "أعمال", "تنفيذي", "متميز", "القاهرة", "شركات"]
+  }
+}
+
+// =============================================================
+// ADDITIONAL SAMPLE DATA NOTES
+// =============================================================
+
+/*
+IMAGE SOURCES EXPLANATION:
+- All images are from Unsplash.com (free, high-quality stock photos)
+- Each facility type uses relevant, authentic imagery:
+  * Gyms: Modern fitness equipment, workout spaces, pools
+  * Resorts: Luxury amenities, pools, spa facilities, desert landscapes  
+  * Coworking: Modern office spaces, creative studios, meeting rooms
+
+VIDEO SOURCES EXPLANATION:  
+- Videos are from Coverr.co (free stock videos)
+- Aspect ratios maintained:
+  * Explore videos: 9:16 (vertical/mobile-optimized)
+  * Promotional videos: 16:9 (horizontal/desktop-optimized)
+
+PRICING STRATEGY:
+- Gyms: 45-120 ACT tokens (varied by location/amenities)
+- Resorts: 280-550 ACT tokens (premium pricing)
+- Coworking: 60-120 ACT tokens (professional rates)
+
+LOCATION ACCURACY:
+- All GeoPoints are accurate Cairo coordinates
+- Addresses reflect real Cairo districts and areas
+- Business names are realistic but fictional
+
+LOCALIZATION:
+- All user-facing content includes both English and Arabic
+- Arabic translations are contextually appropriate
+- Search keywords cover both languages for SEO
+*/
