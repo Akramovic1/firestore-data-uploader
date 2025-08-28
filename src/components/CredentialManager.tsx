@@ -48,6 +48,8 @@ export const CredentialManager: React.FC<CredentialManagerProps> = ({
   
   const [importFile, setImportFile] = useState<File | null>(null);
   const [isImporting, setIsImporting] = useState(false);
+  const [uploadingServiceAccount, setUploadingServiceAccount] = useState<File | null>(null);
+  const [uploadError, setUploadError] = useState<string>('');
   const [importResult, setImportResult] = useState<{ imported: number; skipped: number; errors: string[] } | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<{ type: 'account' | 'provider' | 'all'; id?: string } | null>(null);
@@ -175,6 +177,45 @@ export const CredentialManager: React.FC<CredentialManagerProps> = ({
     }
   };
 
+  const handleServiceAccountUpload = async (file: File) => {
+    setUploadError('');
+    try {
+      // Parse the service account file
+      const text = await file.text();
+      const credentials = JSON.parse(text);
+      
+      // Validate required fields
+      if (!credentials.type || credentials.type !== 'service_account') {
+        throw new Error('Invalid service account file: missing or incorrect type');
+      }
+      if (!credentials.project_id) {
+        throw new Error('Invalid service account file: missing project_id');
+      }
+      if (!credentials.client_email) {
+        throw new Error('Invalid service account file: missing client_email');
+      }
+      if (!credentials.private_key) {
+        throw new Error('Invalid service account file: missing private_key');
+      }
+      
+      // Save the service account
+      const success = credentialStorage.saveServiceAccount(credentials, file.name.replace('.json', ''));
+      
+      if (success) {
+        loadCredentials();
+        onCredentialsChange?.();
+        setUploadingServiceAccount(null);
+        setMessage({ type: 'success', text: 'Service account added successfully' });
+      } else {
+        throw new Error('Failed to save service account');
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      setUploadError(errorMessage);
+      setMessage({ type: 'error', text: `Upload failed: ${errorMessage}` });
+    }
+  };
+
   const handleClearAll = () => {
     try {
       credentialStorage.clearAllCredentials();
@@ -280,7 +321,36 @@ export const CredentialManager: React.FC<CredentialManagerProps> = ({
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900">Firebase Service Accounts</h3>
+                  <button
+                    onClick={() => document.getElementById('service-account-upload')?.click()}
+                    className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Add Service Account</span>
+                  </button>
                 </div>
+
+                {/* Service Account Upload */}
+                <input
+                  id="service-account-upload"
+                  type="file"
+                  accept=".json"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      handleServiceAccountUpload(file);
+                      e.target.value = ''; // Reset input
+                    }
+                  }}
+                  className="hidden"
+                />
+
+                {uploadError && (
+                  <div className="flex items-center space-x-2 p-3 bg-red-50 border-l-4 border-red-400 rounded-lg">
+                    <AlertCircle className="h-4 w-4 text-red-600 flex-shrink-0" />
+                    <p className="text-sm font-medium text-red-700">{uploadError}</p>
+                  </div>
+                )}
 
                 {serviceAccounts.length === 0 ? (
                   <div className="text-center py-12">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, Edit3, Download, RefreshCw, AlertCircle, CheckCircle, Copy, Trash2, Plus } from 'lucide-react';
+import { Eye, Edit3, Download, RefreshCw, AlertCircle, CheckCircle, Copy, Trash2, Plus, Save } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { DocumentSchema, DocumentData } from '../types';
 import { validateFieldValue } from '../utils/schemaValidation';
@@ -276,22 +276,118 @@ export const DataViewer: React.FC<DataViewerProps> = ({
   };
 
   const renderJsonView = () => {
-    const jsonData = JSON.stringify(filteredData, null, 2);
+    React.useEffect(() => {
+      if (jsonView === '') {
+        setJsonView(JSON.stringify(filteredData, null, 2));
+      }
+    }, [filteredData, jsonView]);
+    
+    const handleJsonSave = () => {
+      try {
+        const parsedData = JSON.parse(jsonView);
+        
+        // Validate that it's an array
+        if (!Array.isArray(parsedData)) {
+          throw new Error('JSON must be an array of objects');
+        }
+        
+        // Validate each item against schema
+        const errors: string[] = [];
+        parsedData.forEach((item, index) => {
+          if (typeof item !== 'object' || item === null) {
+            errors.push(`Item ${index + 1}: Must be an object`);
+            return;
+          }
+          
+          schema.fields.forEach(field => {
+            if (field.required && (!item[field.name] || item[field.name] === '')) {
+              errors.push(`Item ${index + 1}: ${field.name} is required`);
+            } else if (item[field.name]) {
+              const validation = validateFieldValue(item[field.name], field);
+              if (!validation.valid) {
+                errors.push(`Item ${index + 1}: ${field.name} - ${validation.error}`);
+              }
+            }
+          });
+        });
+        
+        if (errors.length > 0) {
+          setJsonError(errors.join('\\n'));
+          return;
+        }
+        
+        // Update the data
+        onDataUpdate(parsedData);
+        setJsonError('');
+        
+      } catch (error) {
+        setJsonError(error instanceof Error ? error.message : 'Invalid JSON format');
+      }
+    };
+    
+    const handleJsonReset = () => {
+      setJsonView(JSON.stringify(filteredData, null, 2));
+      setJsonError('');
+    };
     
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h4 className="font-medium text-gray-900">JSON Data ({filteredData.length} items)</h4>
-          <button
-            onClick={handleCopyToClipboard}
-            className="flex items-center space-x-2 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded transition-colors"
-          >
-            <Copy className="h-4 w-4" />
-            <span>Copy</span>
-          </button>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={handleJsonReset}
+              className="flex items-center space-x-2 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+            >
+              <RefreshCw className="h-4 w-4" />
+              <span>Reset</span>
+            </button>
+            <button
+              onClick={handleJsonSave}
+              className="flex items-center space-x-2 px-3 py-1 text-sm bg-blue-600 text-white hover:bg-blue-700 rounded transition-colors"
+            >
+              <Save className="h-4 w-4" />
+              <span>Apply Changes</span>
+            </button>
+            <button
+              onClick={handleCopyToClipboard}
+              className="flex items-center space-x-2 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+            >
+              <Copy className="h-4 w-4" />
+              <span>Copy</span>
+            </button>
+          </div>
         </div>
-        <div className="bg-gray-900 rounded-lg p-4 overflow-auto max-h-96">
-          <pre className="text-green-400 text-sm font-mono">{jsonData}</pre>
+        
+        {jsonError && (
+          <div className="flex items-start space-x-2 p-3 bg-red-50 border-l-4 border-red-400 rounded-lg">
+            <AlertCircle className="h-4 w-4 text-red-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium text-red-700">JSON Validation Error:</p>
+              <pre className="text-xs text-red-600 mt-1 whitespace-pre-wrap">{jsonError}</pre>
+            </div>
+          </div>
+        )}
+        
+        <div className="border border-gray-300 rounded-lg overflow-hidden">
+          <textarea
+            value={jsonView}
+            onChange={(e) => setJsonView(e.target.value)}
+            className="w-full h-96 p-4 font-mono text-sm bg-gray-900 text-green-400 border-none resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Edit your JSON data here..."
+            spellCheck={false}
+          />
+        </div>
+        
+        <div className="text-xs text-gray-500 bg-blue-50 p-3 rounded-lg">
+          <p className="font-medium text-blue-800 mb-1">JSON Editing Tips:</p>
+          <ul className="space-y-1 text-blue-700">
+            <li>• Data must be a valid JSON array of objects</li>
+            <li>• Each object will be validated against the selected schema</li>
+            <li>• Required fields must be present and non-empty</li>
+            <li>• Click "Apply Changes" to save your edits</li>
+            <li>• Use "Reset" to revert to the original data</li>
+          </ul>
         </div>
       </div>
     );
