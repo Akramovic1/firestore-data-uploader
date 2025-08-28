@@ -4,7 +4,15 @@
   "version": "1.0.0",
   "type": "module",
   "description": "AI-powered web application for managing and uploading structured data to Google Firestore with intelligent schema management",
-  "keywords": ["firestore", "firebase", "data-upload", "schema-management", "ai", "react", "typescript"],
+  "keywords": [
+    "firestore",
+    "firebase",
+    "data-upload",
+    "schema-management",
+    "ai",
+    "react",
+    "typescript"
+  ],
   "author": "Ahmed Akram",
   "repository": {
     "type": "git",
@@ -18,7 +26,10 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.60.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "firebase": "^12.1.0",
+    "firebase-admin": "^13.5.0",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.344.0",
     "openai": "^5.16.0",
     "react": "^18.3.1",

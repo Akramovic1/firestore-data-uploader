@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
-import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, Firestore, serverTimestamp } from 'firebase/firestore';
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
 import { UploadCredentials, UploadProgress, UploadLog, DocumentData } from '../types';
 
-export const useFirebaseUpload = () => {
+export const useFirebaseAdminUpload = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState<UploadProgress>({
     total: 0,
@@ -12,8 +12,6 @@ export const useFirebaseUpload = () => {
     percentage: 0,
   });
   const [logs, setLogs] = useState<UploadLog[]>([]);
-  const [firebaseApp, setFirebaseApp] = useState<FirebaseApp | null>(null);
-  const [firestore, setFirestore] = useState<Firestore | null>(null);
 
   const addLog = useCallback((type: 'success' | 'error' | 'info', message: string, details?: string) => {
     const log: UploadLog = {
@@ -26,39 +24,53 @@ export const useFirebaseUpload = () => {
     setLogs(prev => [log, ...prev].slice(0, 100)); // Keep only last 100 logs
   }, []);
 
-  const initializeFirebase = useCallback((credentials: UploadCredentials) => {
+  const initializeFirebaseAdmin = useCallback((credentials: UploadCredentials) => {
     try {
-      // TODO: Replace with your actual Firebase Web SDK config from Firebase Console
-      // Go to Project Settings → General → Your apps → Web app → Config
-      const firebaseConfig = {
-        apiKey: "YOUR_WEB_API_KEY", // Get from Firebase Console
-        authDomain: `${credentials.project_id}.firebaseapp.com`,
-        projectId: credentials.project_id,
-        storageBucket: `${credentials.project_id}.appspot.com`,
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // Get from Firebase Console
-        appId: "YOUR_WEB_APP_ID", // Get from Firebase Console
+      // Check if an app with the same project ID already exists
+      const existingApp = getApps().find(app => app?.options?.projectId === credentials.project_id);
+      if (existingApp) {
+        const db = getFirestore(existingApp);
+        addLog('info', 'Using existing Firebase Admin app');
+        return { app: existingApp, db };
+      }
+
+      // Initialize new Firebase Admin app
+      const serviceAccount = {
+        type: credentials.type,
+        project_id: credentials.project_id,
+        private_key_id: credentials.private_key_id,
+        private_key: credentials.private_key.replace(/\\n/g, '\n'), // Handle escaped newlines
+        client_email: credentials.client_email,
+        client_id: credentials.client_id,
+        auth_uri: credentials.auth_uri,
+        token_uri: credentials.token_uri,
+        auth_provider_x509_cert_url: credentials.auth_provider_x509_cert_url,
+        client_x509_cert_url: credentials.client_x509_cert_url,
       };
 
-      const app = initializeApp(firebaseConfig, `upload-app-${Date.now()}`);
+      const app = initializeApp({
+        credential: cert(serviceAccount),
+        projectId: credentials.project_id,
+      }, `admin-app-${credentials.project_id}-${Date.now()}`);
+
       const db = getFirestore(app);
       
-      setFirebaseApp(app);
-      setFirestore(db);
-      addLog('success', 'Firebase initialized successfully');
+      addLog('success', 'Firebase Admin initialized successfully');
       
       return { app, db };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      addLog('error', 'Failed to initialize Firebase', errorMessage);
+      addLog('error', 'Failed to initialize Firebase Admin', errorMessage);
       throw error;
     }
   }, [addLog]);
 
-  // Helper function to process document data and replace "Timestamp" with serverTimestamp()
+  // Helper function to process document data and handle Firestore-specific types
   const processDocumentData = (doc: DocumentData): DocumentData => {
     const processValue = (value: any): any => {
       if (value === "Timestamp") {
-        return serverTimestamp();
+        // Use Firestore server timestamp
+        return { _seconds: Math.floor(Date.now() / 1000), _nanoseconds: 0 };
       }
       if (Array.isArray(value)) {
         return value.map(processValue);
@@ -89,8 +101,8 @@ export const useFirebaseUpload = () => {
     setProgress({ total: documents.length, completed: 0, failed: 0, percentage: 0 });
     
     try {
-      const { db } = initializeFirebase(credentials);
-      const collectionRef = collection(db, collectionName);
+      const { db } = initializeFirebaseAdmin(credentials);
+      const collectionRef = db.collection(collectionName);
       
       addLog('info', `Starting upload of ${documents.length} documents to collection: ${collectionName}`);
       
@@ -105,7 +117,7 @@ export const useFirebaseUpload = () => {
         const promises = batch.map(async (doc, index) => {
           try {
             const processedDoc = processDocumentData(doc);
-            await addDoc(collectionRef, processedDoc);
+            await collectionRef.add(processedDoc);
             completed++;
             addLog('success', `Document ${i + index + 1} uploaded successfully`);
           } catch (error) {
@@ -114,11 +126,13 @@ export const useFirebaseUpload = () => {
             addLog('error', `Failed to upload document ${i + index + 1}`, errorMessage);
           }
           
+          const currentCompleted = completed;
+          const currentFailed = failed;
           setProgress(prev => ({
             ...prev,
-            completed: completed,
-            failed: failed,
-            percentage: Math.round(((completed + failed) / documents.length) * 100),
+            completed: currentCompleted,
+            failed: currentFailed,
+            percentage: Math.round(((currentCompleted + currentFailed) / documents.length) * 100),
           }));
         });
         
@@ -139,7 +153,7 @@ export const useFirebaseUpload = () => {
     } finally {
       setIsUploading(false);
     }
-  }, [initializeFirebase, addLog]);
+  }, [initializeFirebaseAdmin, addLog]);
 
   const clearLogs = useCallback(() => {
     setLogs([]);
@@ -153,8 +167,6 @@ export const useFirebaseUpload = () => {
     isUploading,
     progress,
     logs,
-    firebaseApp,
-    firestore,
     uploadDocuments,
     clearLogs,
     resetProgress,

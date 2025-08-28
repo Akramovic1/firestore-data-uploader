@@ -8,7 +8,7 @@ import { SchemaSelector } from './components/SchemaSelector';
 import { SchemaViewer } from './components/SchemaViewer';
 import { AIGenerationForm } from './components/AIGenerationForm';
 import { DocumentationViewer } from './components/DocumentationViewer';
-import { useFirebaseUpload } from './hooks/useFirebaseUpload';
+import { useFirestoreRestUpload } from './hooks/useFirestoreRestUpload';
 import { parseCredentialsFile, parseDataFiles, validateCollectionName } from './utils/fileProcessing';
 import { UploadCredentials, DocumentData, DocumentSchema, AIProvider } from './types';
 import { predefinedSchemas } from './schemas/predefinedSchemas';
@@ -43,7 +43,7 @@ function App() {
     generation?: string;
   }>({});
 
-  const { isUploading, progress, logs, uploadDocuments, clearLogs, resetProgress } = useFirebaseUpload();
+  const { isUploading, progress, logs, uploadDocuments, clearLogs, resetProgress } = useFirestoreRestUpload();
   const [aiService, setAiService] = useState<AIService | null>(null);
 
   // Load custom schemas from local storage on app start
@@ -163,7 +163,7 @@ function App() {
       const file = new File([blob], `${selectedSchema.id}-generated-${updatedData.length}-docs.jsonl`, {
         type: 'application/jsonl'
       });
-      setDataFile(file);
+      setDataFiles([file]);
       clearError('data');
     }
   }, [selectedSchema, clearError]);
@@ -178,7 +178,7 @@ function App() {
       const file = new File([blob], `${selectedSchema.id}-generated-${generatedData.length}-docs.jsonl`, {
         type: 'application/jsonl'
       });
-      setDataFile(file);
+      setDataFiles([file]);
       clearError('data');
     }
   }, [generatedData, selectedSchema, clearError]);
@@ -197,7 +197,7 @@ function App() {
 
   const handleClearGeneratedData = useCallback(() => {
     setGeneratedData([]);
-    setDataFile(null);
+    setDataFiles([]);
     setShowDataViewer(false);
     clearError('data');
   }, [clearError]);
