@@ -9,7 +9,7 @@ import { SchemaViewer } from './components/SchemaViewer';
 import { AIGenerationForm } from './components/AIGenerationForm';
 import { DocumentationViewer } from './components/DocumentationViewer';
 import { useFirebaseUpload } from './hooks/useFirebaseUpload';
-import { parseCredentialsFile, parseJsonlFile, validateCollectionName } from './utils/fileProcessing';
+import { parseCredentialsFile, parseDataFiles, validateCollectionName } from './utils/fileProcessing';
 import { UploadCredentials, DocumentData, DocumentSchema, AIProvider } from './types';
 import { predefinedSchemas } from './schemas/predefinedSchemas';
 import { AIService } from './services/aiService';
@@ -24,7 +24,7 @@ function App() {
   const [activeTab, setActiveTab] = useState<'upload' | 'generate' | 'docs'>('upload');
   const [collectionName, setCollectionName] = useState('');
   const [credentialsFile, setCredentialsFile] = useState<File | null>(null);
-  const [dataFile, setDataFile] = useState<File | null>(null);
+  const [dataFiles, setDataFiles] = useState<File[]>([]);
   const [selectedSchema, setSelectedSchema] = useState<DocumentSchema | null>(null);
   const [customSchemas, setCustomSchemas] = useState<DocumentSchema[]>([]);
   const [aiProviders, setAiProviders] = useState<AIProvider[]>([]);
@@ -74,13 +74,13 @@ function App() {
     clearError('collection');
   }, [clearError]);
 
-  const handleCredentialsFileSelect = useCallback((file: File) => {
-    setCredentialsFile(file);
+  const handleCredentialsFileSelect = useCallback((files: File[]) => {
+    setCredentialsFile(files[0] || null);
     clearError('credentials');
   }, [clearError]);
 
-  const handleDataFileSelect = useCallback((file: File) => {
-    setDataFile(file);
+  const handleDataFileSelect = useCallback((files: File[]) => {
+    setDataFiles(files);
     clearError('data');
     // Clear generated data when user manually selects a file
     if (generatedData.length > 0) {
@@ -218,8 +218,8 @@ function App() {
       return;
     }
 
-    if (!dataFile) {
-      setErrors(prev => ({ ...prev, data: 'Please select a JSONL data file' }));
+    if (dataFiles.length === 0) {
+      setErrors(prev => ({ ...prev, data: 'Please select data files (JSON or JSONL)' }));
       return;
     }
 
@@ -227,8 +227,8 @@ function App() {
       // Parse credentials
       const credentials: UploadCredentials = await parseCredentialsFile(credentialsFile);
       
-      // Parse data
-      const documents: DocumentData[] = await parseJsonlFile(dataFile);
+      // Parse data from multiple files
+      const documents: DocumentData[] = await parseDataFiles(dataFiles);
       
       // Start upload
       await uploadDocuments(collectionName, documents, credentials);
@@ -237,9 +237,9 @@ function App() {
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       setErrors(prev => ({ ...prev, upload: errorMessage }));
     }
-  }, [collectionName, credentialsFile, dataFile, uploadDocuments]);
+  }, [collectionName, credentialsFile, dataFiles, uploadDocuments]);
 
-  const canUpload = collectionName.trim() && credentialsFile && dataFile && !isUploading;
+  const canUpload = collectionName.trim() && credentialsFile && dataFiles.length > 0 && !isUploading;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 relative overflow-hidden">
@@ -370,9 +370,8 @@ function App() {
                       accept=".json"
                       label="Firebase Service Account Credentials"
                       description="JSON file with your Firebase service account credentials"
-                      selectedFile={credentialsFile}
+                      selectedFiles={credentialsFile ? [credentialsFile] : []}
                       error={errors.credentials}
-                      allowSaving={true}
                     />
                     <SavedCredentials
                       onCredentialSelect={handleCredentialsFileSelect}
@@ -382,11 +381,12 @@ function App() {
 
                   <FileUpload
                     onFileSelect={handleDataFileSelect}
-                    accept=".jsonl"
-                    label="Data File (JSONL)"
-                    description="JSONL file with documents to upload (one JSON object per line)"
-                    selectedFile={dataFile}
+                    accept=".json,.jsonl"
+                    label="Data Files"
+                    description="JSON or JSONL files with documents to upload"
+                    selectedFiles={dataFiles}
                     error={errors.data}
+                    multiple={true}
                   />
 
                   {/* Generated Data Indicator */}
@@ -575,7 +575,7 @@ function App() {
                 </div>
               )}
               
-              {dataFile && (
+              {dataFiles.length > 0 && (
                 <div className="relative group animate-slideUp">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-success-300 to-success-400 rounded-2xl opacity-50 blur"></div>
                   <div className="relative bg-gradient-to-br from-success-50 via-white to-success-100 border border-success-200 rounded-2xl p-8 shadow-glass">
@@ -583,23 +583,41 @@ function App() {
                       <div className="p-2 bg-success-100 rounded-lg">
                         <FileText className="h-6 w-6 text-success-600" />
                       </div>
-                      <h3 className="text-xl font-bold text-success-900">Generated Data Ready</h3>
+                      <h3 className="text-xl font-bold text-success-900">Data Files Ready</h3>
                     </div>
                     <div className="relative p-6 bg-white/80 backdrop-blur-sm border border-success-300 rounded-xl shadow-inner-lg">
-                      <div className="flex items-center space-x-4">
-                        <div className="p-3 bg-gradient-to-r from-success-500 to-success-600 rounded-xl shadow-lg">
-                          <FileText className="h-8 w-8 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-lg font-semibold text-success-800">{dataFile.name}</p>
-                          <div className="flex items-center space-x-4 mt-2">
-                            <span className="inline-flex items-center px-3 py-1 bg-success-100 text-success-800 text-sm font-medium rounded-full">
-                              {(dataFile.size / 1024).toFixed(2)} KB
-                            </span>
-                            <span className="inline-flex items-center px-3 py-1 bg-primary-100 text-primary-800 text-sm font-medium rounded-full">
-                              Ready for Upload
-                            </span>
+                      <div className="space-y-4">
+                        {dataFiles.map((file, index) => (
+                          <div key={`${file.name}-${index}`} className="flex items-center space-x-4">
+                            <div className="p-2 bg-gradient-to-r from-success-500 to-success-600 rounded-lg shadow">
+                              <FileText className="h-6 w-6 text-white" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-base font-semibold text-success-800">{file.name}</p>
+                              <div className="flex items-center space-x-3 mt-1">
+                                <span className="inline-flex items-center px-2 py-1 bg-success-100 text-success-800 text-xs font-medium rounded-full">
+                                  {(file.size / 1024).toFixed(2)} KB
+                                </span>
+                                <span className="inline-flex items-center px-2 py-1 bg-primary-100 text-primary-800 text-xs font-medium rounded-full">
+                                  {file.name.toLowerCase().endsWith('.json') ? 'JSON' : 'JSONL'}
+                                </span>
+                              </div>
+                            </div>
                           </div>
+                        ))}
+                      </div>
+                      <div className="mt-4 pt-4 border-t border-success-200">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-success-700">Total files:</span>
+                          <span className="inline-flex items-center px-3 py-1 bg-primary-100 text-primary-800 text-sm font-medium rounded-full">
+                            {dataFiles.length}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between mt-2">
+                          <span className="text-sm font-medium text-success-700">Total size:</span>
+                          <span className="inline-flex items-center px-3 py-1 bg-success-100 text-success-800 text-sm font-medium rounded-full">
+                            {(dataFiles.reduce((total, file) => total + file.size, 0) / 1024).toFixed(2)} KB
+                          </span>
                         </div>
                       </div>
                     </div>

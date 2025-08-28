@@ -2,12 +2,13 @@ import React, { useCallback, useState } from 'react';
 import { Upload, File, X, AlertCircle } from 'lucide-react';
 
 interface FileUploadProps {
-  onFileSelect: (file: File) => void;
+  onFileSelect: (files: File[]) => void;
   accept: string;
   label: string;
   description: string;
-  selectedFile?: File | null;
+  selectedFiles?: File[];
   error?: string;
+  multiple?: boolean;
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({
@@ -15,8 +16,9 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   accept,
   label,
   description,
-  selectedFile,
-  error
+  selectedFiles = [],
+  error,
+  multiple = false
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -26,19 +28,33 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     
     const files = Array.from(e.dataTransfer.files);
     if (files.length > 0) {
-      onFileSelect(files[0]);
+      if (multiple) {
+        onFileSelect([...selectedFiles, ...files]);
+      } else {
+        onFileSelect([files[0]]);
+      }
     }
-  }, [onFileSelect]);
+  }, [onFileSelect, multiple, selectedFiles]);
 
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      onFileSelect(files[0]);
+      const fileArray = Array.from(files);
+      if (multiple) {
+        onFileSelect([...selectedFiles, ...fileArray]);
+      } else {
+        onFileSelect([fileArray[0]]);
+      }
     }
-  }, [onFileSelect]);
+  }, [onFileSelect, multiple, selectedFiles]);
 
-  const removeFile = useCallback(() => {
-    onFileSelect(null as any);
+  const removeFile = useCallback((index: number) => {
+    const newFiles = selectedFiles.filter((_, i) => i !== index);
+    onFileSelect(newFiles);
+  }, [onFileSelect, selectedFiles]);
+
+  const removeAllFiles = useCallback(() => {
+    onFileSelect([]);
   }, [onFileSelect]);
 
   return (
@@ -73,64 +89,76 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         <input
           type="file"
           accept={accept}
+          multiple={multiple}
           onChange={handleFileChange}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
         />
         
         <div className="text-center relative z-5">
-          {selectedFile ? (
+          {selectedFiles.length > 0 ? (
             <div className="space-y-4 animate-scaleIn">
-              <div className="relative group">
-                <div className="p-4 bg-gradient-to-r from-success-500 to-success-600 rounded-2xl shadow-lg mx-auto w-fit">
-                  <File className="h-10 w-10 text-white" />
-                </div>
-                <div className="absolute -top-2 -right-2">
+              {multiple && selectedFiles.length > 1 && (
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm font-medium text-gray-600">
+                    {selectedFiles.length} files selected
+                  </span>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      removeFile();
+                      removeAllFiles();
                     }}
-                    className="p-2 bg-danger-500 hover:bg-danger-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-110"
+                    className="text-sm text-danger-600 hover:text-danger-700 font-medium"
                   >
-                    <X size={16} />
+                    Remove all
                   </button>
                 </div>
-              </div>
-              <div className="space-y-3">
-                <p className="text-lg font-semibold text-success-800">{selectedFile.name}</p>
-                <div className="flex justify-center items-center space-x-3">
-                  <span className="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm border border-success-300 rounded-full text-sm font-medium text-success-700 shadow-inner-lg">
-                    {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-                  </span>
-                  {allowSaving && accept === '.json' && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleSaveCredentials();
-                      }}
-                      className="flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-sm shadow-lg"
-                      title="Save credentials for future use"
-                    >
-                      <Save className="h-4 w-4" />
-                      <span>Save</span>
-                    </button>
-                  )}
-                </div>
-                {saveMessage && (
-                  <div className={`p-3 rounded-lg flex items-center justify-center space-x-2 text-sm transition-all duration-300 ${
-                    saveMessage.type === 'success' 
-                      ? 'bg-green-100 text-green-800 border border-green-200' 
-                      : 'bg-red-100 text-red-800 border border-red-200'
-                  }`}>
-                    {saveMessage.type === 'success' ? (
-                      <CheckCircle className="h-4 w-4" />
-                    ) : (
-                      <AlertCircle className="h-4 w-4" />
-                    )}
-                    <span>{saveMessage.text}</span>
+              )}
+              
+              <div className="space-y-3 max-h-48 overflow-y-auto">
+                {selectedFiles.map((file, index) => (
+                  <div key={`${file.name}-${index}`} className="relative group bg-white/50 backdrop-blur-sm rounded-xl p-3 border border-success-200">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-gradient-to-r from-success-500 to-success-600 rounded-lg shadow">
+                        <File className="h-6 w-6 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-success-800 truncate">{file.name}</p>
+                        <p className="text-xs text-success-600">
+                          {(file.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeFile(index);
+                        }}
+                        className="p-1.5 bg-danger-500 hover:bg-danger-600 text-white rounded-full shadow hover:shadow-lg transition-all duration-200 transform hover:scale-110"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
                   </div>
-                )}
+                ))}
               </div>
+              
+              {selectedFiles.length === 1 && (
+                <div className="flex justify-center">
+                  <span className="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm border border-success-300 rounded-full text-sm font-medium text-success-700 shadow-inner-lg">
+                    {selectedFiles.reduce((total, file) => total + file.size, 0) / 1024 / 1024 < 0.01 
+                      ? `${(selectedFiles.reduce((total, file) => total + file.size, 0) / 1024).toFixed(2)} KB`
+                      : `${(selectedFiles.reduce((total, file) => total + file.size, 0) / 1024 / 1024).toFixed(2)} MB`
+                    } total
+                  </span>
+                </div>
+              )}
+              
+              {multiple && selectedFiles.length > 1 && (
+                <div className="flex justify-center">
+                  <span className="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm border border-success-300 rounded-full text-sm font-medium text-success-700 shadow-inner-lg">
+                    {(selectedFiles.reduce((total, file) => total + file.size, 0) / 1024 / 1024).toFixed(2)} MB total
+                  </span>
+                </div>
+              )}
             </div>
           ) : (
             <div className="space-y-4 animate-fadeIn">
@@ -148,7 +176,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
                   <span className="font-semibold text-primary-600 hover:text-primary-700 transition-colors">Click to upload</span>
                   {' '}or drag and drop
                 </p>
-                <p className="text-sm text-gray-600 leading-relaxed max-w-xs mx-auto">{description}</p>
+                <p className="text-sm text-gray-600 leading-relaxed max-w-xs mx-auto">
+                  {description}
+                  {multiple && <span className="block mt-1 text-xs text-gray-500">You can select multiple files</span>}
+                </p>
               </div>
             </div>
           )}

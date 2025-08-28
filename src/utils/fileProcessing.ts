@@ -41,6 +41,51 @@ export const parseCredentialsFile = (file: File): Promise<UploadCredentials> => 
   });
 };
 
+export const parseJsonFile = (file: File): Promise<DocumentData[]> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const data = JSON.parse(content);
+        
+        // Handle both single object and array of objects
+        let documents: DocumentData[];
+        
+        if (Array.isArray(data)) {
+          documents = data.filter(item => typeof item === 'object' && item !== null);
+          
+          if (documents.length !== data.length) {
+            reject(new Error('JSON file contains invalid items. All items must be objects.'));
+            return;
+          }
+        } else if (typeof data === 'object' && data !== null) {
+          documents = [data];
+        } else {
+          reject(new Error('JSON file must contain an object or array of objects'));
+          return;
+        }
+        
+        if (documents.length === 0) {
+          reject(new Error('No valid documents found in JSON file'));
+          return;
+        }
+        
+        resolve(documents);
+      } catch (error) {
+        reject(new Error('Invalid JSON file. Please check your file format.'));
+      }
+    };
+    
+    reader.onerror = () => {
+      reject(new Error('Failed to read file'));
+    };
+    
+    reader.readAsText(file);
+  });
+};
+
 export const parseJsonlFile = (file: File): Promise<DocumentData[]> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -119,4 +164,30 @@ export const validateCollectionName = (name: string): string | null => {
   }
   
   return null;
+};
+
+export const parseDataFiles = async (files: File[]): Promise<DocumentData[]> => {
+  const allDocuments: DocumentData[] = [];
+  
+  for (const file of files) {
+    const fileExtension = file.name.toLowerCase().split('.').pop();
+    
+    try {
+      let documents: DocumentData[];
+      
+      if (fileExtension === 'json') {
+        documents = await parseJsonFile(file);
+      } else if (fileExtension === 'jsonl') {
+        documents = await parseJsonlFile(file);
+      } else {
+        throw new Error(`Unsupported file format: ${fileExtension}. Only JSON and JSONL files are supported.`);
+      }
+      
+      allDocuments.push(...documents);
+    } catch (error) {
+      throw new Error(`Error processing ${file.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+  
+  return allDocuments;
 };

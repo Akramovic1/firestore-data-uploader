@@ -3,7 +3,7 @@ import { Key, ChevronDown, ChevronRight, Trash2, CheckCircle } from 'lucide-reac
 import { CredentialStorage } from '../utils/credentialStorage';
 
 interface SavedCredentialsProps {
-  onCredentialSelect: (credentials: any) => void;
+  onCredentialSelect: (credentials: File[]) => void;
   selectedCredentialId?: string;
 }
 
@@ -43,7 +43,7 @@ export const SavedCredentials: React.FC<SavedCredentialsProps> = ({
     const credentialsJson = JSON.stringify(account.credentials, null, 2);
     const blob = new Blob([credentialsJson], { type: 'application/json' });
     const file = new File([blob], `${account.name}.json`, { type: 'application/json' });
-    onCredentialSelect(file);
+    onCredentialSelect([file]);
   };
 
   const handleDeleteAccount = (accountId: string, event: React.MouseEvent) => {

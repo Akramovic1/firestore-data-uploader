@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, Firestore } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, Firestore, serverTimestamp } from 'firebase/firestore';
 import { UploadCredentials, UploadProgress, UploadLog, DocumentData } from '../types';
 
 export const useFirebaseUpload = () => {
@@ -52,6 +52,32 @@ export const useFirebaseUpload = () => {
     }
   }, [addLog]);
 
+  // Helper function to process document data and replace "Timestamp" with serverTimestamp()
+  const processDocumentData = (doc: DocumentData): DocumentData => {
+    const processValue = (value: any): any => {
+      if (value === "Timestamp") {
+        return serverTimestamp();
+      }
+      if (Array.isArray(value)) {
+        return value.map(processValue);
+      }
+      if (value && typeof value === 'object') {
+        const processed: any = {};
+        for (const [key, val] of Object.entries(value)) {
+          processed[key] = processValue(val);
+        }
+        return processed;
+      }
+      return value;
+    };
+
+    const processed: DocumentData = {};
+    for (const [key, value] of Object.entries(doc)) {
+      processed[key] = processValue(value);
+    }
+    return processed;
+  };
+
   const uploadDocuments = useCallback(async (
     collectionName: string,
     documents: DocumentData[],
@@ -76,7 +102,8 @@ export const useFirebaseUpload = () => {
         
         const promises = batch.map(async (doc, index) => {
           try {
-            await addDoc(collectionRef, doc);
+            const processedDoc = processDocumentData(doc);
+            await addDoc(collectionRef, processedDoc);
             completed++;
             addLog('success', `Document ${i + index + 1} uploaded successfully`);
           } catch (error) {
