@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Upload, Database, FileText, AlertCircle, Bot, BookOpen } from 'lucide-react';
+import { Upload, Database, FileText, AlertCircle, Bot, BookOpen, Eye, X } from 'lucide-react';
 import { FileUpload } from './components/FileUpload';
 import { CollectionInput } from './components/CollectionInput';
 import { ProgressBar } from './components/ProgressBar';
@@ -82,7 +82,12 @@ function App() {
   const handleDataFileSelect = useCallback((file: File) => {
     setDataFile(file);
     clearError('data');
-  }, [clearError]);
+    // Clear generated data when user manually selects a file
+    if (generatedData.length > 0) {
+      setGeneratedData([]);
+      setShowDataViewer(false);
+    }
+  }, [clearError, generatedData.length]);
 
   const handleCustomSchemaAdded = useCallback((schema: DocumentSchema) => {
     // Save to storage and update state
@@ -124,11 +129,15 @@ function App() {
     setErrors(prev => ({ ...prev, generation: undefined }));
 
     try {
+      // Get default custom instruction
+      const defaultInstruction = credentialStorage.getDefaultCustomInstruction();
+      
       const documents = await aiService.generateDocuments(
         selectedSchema,
         count,
         provider,
-        customPrompt
+        customPrompt,
+        defaultInstruction?.instruction
       );
 
       // Store generated data and show viewer
@@ -146,7 +155,18 @@ function App() {
 
   const handleDataUpdate = useCallback((updatedData: DocumentData[]) => {
     setGeneratedData(updatedData);
-  }, []);
+    
+    // Update the JSONL file in real-time as data is modified
+    if (updatedData.length > 0 && selectedSchema) {
+      const jsonlContent = updatedData.map(doc => JSON.stringify(doc)).join('\n');
+      const blob = new Blob([jsonlContent], { type: 'application/jsonl' });
+      const file = new File([blob], `${selectedSchema.id}-generated-${updatedData.length}-docs.jsonl`, {
+        type: 'application/jsonl'
+      });
+      setDataFile(file);
+      clearError('data');
+    }
+  }, [selectedSchema, clearError]);
 
   const handleDataViewerClose = useCallback(() => {
     setShowDataViewer(false);
@@ -168,6 +188,19 @@ function App() {
     setShowDataViewer(false);
     setGeneratedData([]);
   }, []);
+
+  const handleReopenDataViewer = useCallback(() => {
+    if (generatedData.length > 0) {
+      setShowDataViewer(true);
+    }
+  }, [generatedData.length]);
+
+  const handleClearGeneratedData = useCallback(() => {
+    setGeneratedData([]);
+    setDataFile(null);
+    setShowDataViewer(false);
+    clearError('data');
+  }, [clearError]);
 
   const handleUpload = useCallback(async () => {
     // Reset previous errors
@@ -355,6 +388,41 @@ function App() {
                     selectedFile={dataFile}
                     error={errors.data}
                   />
+
+                  {/* Generated Data Indicator */}
+                  {generatedData.length > 0 && !showDataViewer && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="p-2 bg-green-100 rounded-lg">
+                            <Bot className="h-5 w-5 text-green-600" />
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-green-900">AI Generated Data Ready</h4>
+                            <p className="text-sm text-green-700">
+                              {generatedData.length} documents generated for "{selectedSchema?.name}" schema
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={handleReopenDataViewer}
+                            className="flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
+                          >
+                            <Eye className="h-4 w-4" />
+                            <span>View & Edit</span>
+                          </button>
+                          <button
+                            onClick={handleClearGeneratedData}
+                            className="flex items-center space-x-2 px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                          >
+                            <X className="h-4 w-4" />
+                            <span>Clear</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {errors.upload && (
                     <div className="relative p-6 bg-gradient-to-r from-danger-50 to-danger-100 border-l-4 border-danger-400 rounded-xl shadow-lg animate-slideIn">

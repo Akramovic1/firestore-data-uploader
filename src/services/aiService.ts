@@ -21,9 +21,10 @@ export class AIService {
     schema: DocumentSchema,
     count: number,
     provider: 'openai' | 'claude',
-    customPrompt?: string
+    customPrompt?: string,
+    customInstruction?: string
   ): Promise<DocumentData[]> {
-    const prompt = this.buildPrompt(schema, count, customPrompt);
+    const prompt = this.buildPrompt(schema, count, customPrompt, customInstruction);
     
     if (provider === 'openai' && this.openai) {
       return this.generateWithOpenAI(prompt);
@@ -92,7 +93,7 @@ export class AIService {
     };
   }
 
-  private buildPrompt(schema: DocumentSchema, count: number, customPrompt?: string): string {
+  private buildPrompt(schema: DocumentSchema, count: number, customPrompt?: string, customInstruction?: string): string {
     const schemaDescription = `
 Schema: ${schema.name}
 Description: ${schema.description}
@@ -117,6 +118,7 @@ ${schema.examples.map(example => JSON.stringify(example, null, 2)).join('\n\n')}
 
 ${schemaDescription}
 
+${customInstruction ? `Custom Generation Instructions: ${customInstruction}\n` : ''}
 ${customPrompt ? `Additional requirements: ${customPrompt}\n` : ''}
 
 IMPORTANT INSTRUCTIONS:
@@ -140,7 +142,7 @@ Return format: [{"field1": "value1", "field2": "value2"}, ...]`;
 
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4',
+        model: 'gpt-5',
         messages: [
           {
             role: 'system',
@@ -173,7 +175,7 @@ Return format: [{"field1": "value1", "field2": "value2"}, ...]`;
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-sonnet-20240229',
+        model: 'claude-4-sonnet-20241022',
         max_tokens: 4000,
         temperature: 0.7,
         messages: [
@@ -300,7 +302,7 @@ Return ONLY a JSON array of enhanced field objects:
 
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4',
+        model: 'gpt-5',
         messages: [
           {
             role: 'system',
@@ -333,7 +335,7 @@ Return ONLY a JSON array of enhanced field objects:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-sonnet-20240229',
+        model: 'claude-4-sonnet-20241022',
         max_tokens: 2000,
         temperature: 0.3,
         messages: [

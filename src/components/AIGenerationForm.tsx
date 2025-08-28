@@ -29,7 +29,7 @@ export const AIGenerationForm: React.FC<AIGenerationFormProps> = ({
     if (apiKey.trim()) {
       const provider: AIProvider = {
         id,
-        name: id === 'openai' ? 'OpenAI' : 'Claude',
+        name: id === 'openai' ? 'OpenAI GPT-5' : 'Claude 4 Sonnet',
         apiKey: apiKey.trim()
       };
       updatedProviders.push(provider);
@@ -136,10 +136,10 @@ export const AIGenerationForm: React.FC<AIGenerationFormProps> = ({
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="openai" disabled={!isProviderConfigured('openai')}>
-                OpenAI GPT-4 {!isProviderConfigured('openai') && '(Not configured)'}
+                OpenAI GPT-5 {!isProviderConfigured('openai') && '(Not configured)'}
               </option>
               <option value="claude" disabled={!isProviderConfigured('claude')}>
-                Claude 3 Sonnet {!isProviderConfigured('claude') && '(Not configured)'}
+                Claude 4 Sonnet {!isProviderConfigured('claude') && '(Not configured)'}
               </option>
             </select>
           </div>

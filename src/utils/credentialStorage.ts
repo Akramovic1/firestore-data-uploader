@@ -3,13 +3,24 @@ import { UploadCredentials, AIProvider } from '../types';
 const STORAGE_KEYS = {
   SERVICE_ACCOUNTS: 'firestore_service_accounts',
   AI_PROVIDERS: 'firestore_ai_providers',
+  CUSTOM_INSTRUCTIONS: 'firestore_custom_instructions',
   VERSION: '1.0'
 };
+
+interface CustomInstruction {
+  id: string;
+  name: string;
+  instruction: string;
+  isDefault: boolean;
+  createdAt: number;
+  lastModified: number;
+}
 
 interface StoredCredentials {
   version: string;
   serviceAccounts: StoredServiceAccount[];
   aiProviders: AIProvider[];
+  customInstructions?: CustomInstruction[];
   lastModified: number;
 }
 
@@ -416,4 +427,134 @@ export class CredentialStorage {
     
     return `${maskedLocal}@${domain}`;
   }
+
+  // Custom Instructions Management
+  getCustomInstructions(): CustomInstruction[] {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.CUSTOM_INSTRUCTIONS);
+      if (!stored) {
+        // Create default instruction if none exist
+        const defaultInstruction: CustomInstruction = {
+          id: 'default',
+          name: 'Default Instructions',
+          instruction: 'Generate realistic and diverse data that follows the schema requirements. Ensure data variety and authenticity.',
+          isDefault: true,
+          createdAt: Date.now(),
+          lastModified: Date.now()
+        };
+        this.saveCustomInstruction(defaultInstruction);
+        return [defaultInstruction];
+      }
+      
+      const instructions: CustomInstruction[] = JSON.parse(stored);
+      return Array.isArray(instructions) ? instructions : [];
+    } catch (error) {
+      console.error('Error loading custom instructions:', error);
+      return [];
+    }
+  }
+
+  saveCustomInstruction(instruction: Omit<CustomInstruction, 'id' | 'createdAt'> | CustomInstruction): boolean {
+    try {
+      const instructions = this.getCustomInstructions();
+      const timestamp = Date.now();
+      
+      let savedInstruction: CustomInstruction;
+      if ('id' in instruction) {
+        // Update existing
+        savedInstruction = { ...instruction, lastModified: timestamp };
+        const index = instructions.findIndex(i => i.id === instruction.id);
+        if (index >= 0) {
+          instructions[index] = savedInstruction;
+        } else {
+          instructions.push(savedInstruction);
+        }
+      } else {
+        // Create new
+        savedInstruction = {
+          ...instruction,
+          id: `instr_${timestamp}_${Math.random().toString(36).substr(2, 9)}`,
+          createdAt: timestamp,
+          lastModified: timestamp
+        };
+        instructions.push(savedInstruction);
+      }
+      
+      localStorage.setItem(STORAGE_KEYS.CUSTOM_INSTRUCTIONS, JSON.stringify(instructions));
+      return true;
+    } catch (error) {
+      console.error('Error saving custom instruction:', error);
+      return false;
+    }
+  }
+
+  updateCustomInstruction(id: string, updates: Partial<CustomInstruction>): boolean {
+    try {
+      const instructions = this.getCustomInstructions();
+      const index = instructions.findIndex(i => i.id === id);
+      
+      if (index >= 0) {
+        instructions[index] = { 
+          ...instructions[index], 
+          ...updates, 
+          lastModified: Date.now() 
+        };
+        localStorage.setItem(STORAGE_KEYS.CUSTOM_INSTRUCTIONS, JSON.stringify(instructions));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error updating custom instruction:', error);
+      return false;
+    }
+  }
+
+  deleteCustomInstruction(id: string): boolean {
+    try {
+      const instructions = this.getCustomInstructions();
+      const instruction = instructions.find(i => i.id === id);
+      
+      // Don't allow deleting default instruction
+      if (instruction?.isDefault) {
+        return false;
+      }
+      
+      const filteredInstructions = instructions.filter(i => i.id !== id);
+      localStorage.setItem(STORAGE_KEYS.CUSTOM_INSTRUCTIONS, JSON.stringify(filteredInstructions));
+      return true;
+    } catch (error) {
+      console.error('Error deleting custom instruction:', error);
+      return false;
+    }
+  }
+
+  getDefaultCustomInstruction(): CustomInstruction | null {
+    const instructions = this.getCustomInstructions();
+    return instructions.find(i => i.isDefault) || instructions[0] || null;
+  }
+
+  setDefaultCustomInstruction(id: string): boolean {
+    try {
+      const instructions = this.getCustomInstructions();
+      
+      // Remove default flag from all instructions
+      instructions.forEach(i => i.isDefault = false);
+      
+      // Set the new default
+      const instruction = instructions.find(i => i.id === id);
+      if (instruction) {
+        instruction.isDefault = true;
+        instruction.lastModified = Date.now();
+        localStorage.setItem(STORAGE_KEYS.CUSTOM_INSTRUCTIONS, JSON.stringify(instructions));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error setting default custom instruction:', error);
+      return false;
+    }
+  }
 }
+
+// Export the CustomInstruction type for use in components
+export type { CustomInstruction };
