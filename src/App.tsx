@@ -15,6 +15,10 @@ import { predefinedSchemas } from './schemas/predefinedSchemas';
 import { AIService } from './services/aiService';
 import { SchemaStorage } from './utils/schemaStorage';
 import { SchemaManager } from './components/SchemaManager';
+import { CredentialManager } from './components/CredentialManager';
+import { CredentialStorage } from './utils/credentialStorage';
+import { SavedCredentials } from './components/SavedCredentials';
+import { DataViewer } from './components/DataViewer';
 
 function App() {
   const [activeTab, setActiveTab] = useState<'upload' | 'generate' | 'docs'>('upload');
@@ -25,8 +29,12 @@ function App() {
   const [customSchemas, setCustomSchemas] = useState<DocumentSchema[]>([]);
   const [aiProviders, setAiProviders] = useState<AIProvider[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedData, setGeneratedData] = useState<DocumentData[]>([]);
+  const [showDataViewer, setShowDataViewer] = useState(false);
   const [showSchemaManager, setShowSchemaManager] = useState(false);
+  const [showCredentialManager, setShowCredentialManager] = useState(false);
   const [schemaStorage] = useState(() => SchemaStorage.getInstance());
+  const [credentialStorage] = useState(() => CredentialStorage.getInstance());
   const [errors, setErrors] = useState<{
     collection?: string;
     credentials?: string;
@@ -42,7 +50,11 @@ function App() {
   React.useEffect(() => {
     const savedSchemas = schemaStorage.getAllSchemas();
     setCustomSchemas(savedSchemas);
-  }, [schemaStorage]);
+    
+    // Load saved AI providers
+    const savedProviders = credentialStorage.getAIProviders();
+    setAiProviders(savedProviders);
+  }, [schemaStorage, credentialStorage]);
 
   // Initialize AI service when providers change
   React.useEffect(() => {
@@ -119,14 +131,9 @@ function App() {
         customPrompt
       );
 
-      // Convert documents to JSONL format and create a blob
-      const jsonlContent = documents.map(doc => JSON.stringify(doc)).join('\n');
-      const blob = new Blob([jsonlContent], { type: 'application/jsonl' });
-      const file = new File([blob], `${selectedSchema.id}-generated-${count}-docs.jsonl`, {
-        type: 'application/jsonl'
-      });
-
-      setDataFile(file);
+      // Store generated data and show viewer
+      setGeneratedData(documents);
+      setShowDataViewer(true);
       clearError('data');
       
     } catch (error) {
@@ -136,6 +143,31 @@ function App() {
       setIsGenerating(false);
     }
   }, [selectedSchema, aiService, clearError]);
+
+  const handleDataUpdate = useCallback((updatedData: DocumentData[]) => {
+    setGeneratedData(updatedData);
+  }, []);
+
+  const handleDataViewerClose = useCallback(() => {
+    setShowDataViewer(false);
+    
+    // Convert the final data to a file for upload
+    if (generatedData.length > 0 && selectedSchema) {
+      const jsonlContent = generatedData.map(doc => JSON.stringify(doc)).join('\n');
+      const blob = new Blob([jsonlContent], { type: 'application/jsonl' });
+      const file = new File([blob], `${selectedSchema.id}-generated-${generatedData.length}-docs.jsonl`, {
+        type: 'application/jsonl'
+      });
+      setDataFile(file);
+      clearError('data');
+    }
+  }, [generatedData, selectedSchema, clearError]);
+
+  const handleRegenerateData = useCallback(() => {
+    // Close the viewer and allow user to generate again
+    setShowDataViewer(false);
+    setGeneratedData([]);
+  }, []);
 
   const handleUpload = useCallback(async () => {
     // Reset previous errors
@@ -248,7 +280,14 @@ function App() {
                 className="relative flex items-center space-x-3 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 group text-gray-600 hover:text-gray-900 hover:bg-white/50 hover:scale-102"
               >
                 <Database className="h-5 w-5 relative z-10 group-hover:animate-pulse" />
-                <span className="relative z-10 font-semibold">Manage ({customSchemas.length})</span>
+                <span className="relative z-10 font-semibold">Schemas ({customSchemas.length})</span>
+              </button>
+              <button
+                onClick={() => setShowCredentialManager(true)}
+                className="relative flex items-center space-x-3 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 group text-gray-600 hover:text-gray-900 hover:bg-white/50 hover:scale-102"
+              >
+                <Database className="h-5 w-5 relative z-10 group-hover:animate-pulse" />
+                <span className="relative z-10 font-semibold">Credentials</span>
               </button>
               <button
                 onClick={() => setActiveTab('docs')}
@@ -292,14 +331,21 @@ function App() {
                     error={errors.collection}
                   />
 
-                  <FileUpload
-                    onFileSelect={handleCredentialsFileSelect}
-                    accept=".json"
-                    label="Firebase Service Account Credentials"
-                    description="JSON file with your Firebase service account credentials"
-                    selectedFile={credentialsFile}
-                    error={errors.credentials}
-                  />
+                  <div className="space-y-4">
+                    <FileUpload
+                      onFileSelect={handleCredentialsFileSelect}
+                      accept=".json"
+                      label="Firebase Service Account Credentials"
+                      description="JSON file with your Firebase service account credentials"
+                      selectedFile={credentialsFile}
+                      error={errors.credentials}
+                      allowSaving={true}
+                    />
+                    <SavedCredentials
+                      onCredentialSelect={handleCredentialsFileSelect}
+                      selectedCredentialId={credentialsFile?.name}
+                    />
+                  </div>
 
                   <FileUpload
                     onFileSelect={handleDataFileSelect}
@@ -524,6 +570,30 @@ function App() {
             customSchemas={customSchemas}
             onSchemasChange={handleSchemasChange}
             aiService={aiService || undefined}
+          />
+        )}
+        
+        {/* Credential Manager Modal */}
+        {showCredentialManager && (
+          <CredentialManager
+            onClose={() => setShowCredentialManager(false)}
+            onCredentialsChange={() => {
+              // Reload AI providers when credentials change
+              const savedProviders = credentialStorage.getAIProviders();
+              setAiProviders(savedProviders);
+            }}
+          />
+        )}
+
+        {/* Data Viewer Modal */}
+        {showDataViewer && selectedSchema && (
+          <DataViewer
+            data={generatedData}
+            schema={selectedSchema}
+            onDataUpdate={handleDataUpdate}
+            onClose={handleDataViewerClose}
+            onRegenerate={handleRegenerateData}
+            isRegenerating={isGenerating}
           />
         )}
       </div>

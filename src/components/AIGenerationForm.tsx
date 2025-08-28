@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bot, Key, Zap, Settings } from 'lucide-react';
 import { DocumentSchema, AIProvider } from '../types';
+import { CredentialStorage } from '../utils/credentialStorage';
 
 interface AIGenerationFormProps {
   schema: DocumentSchema;
@@ -21,15 +22,22 @@ export const AIGenerationForm: React.FC<AIGenerationFormProps> = ({
   const [selectedProvider, setSelectedProvider] = useState<'openai' | 'claude'>('openai');
   const [customPrompt, setCustomPrompt] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [credentialStorage] = useState(() => CredentialStorage.getInstance());
 
   const updateProvider = (id: 'openai' | 'claude', apiKey: string) => {
     const updatedProviders = providers.filter(p => p.id !== id);
     if (apiKey.trim()) {
-      updatedProviders.push({
+      const provider: AIProvider = {
         id,
         name: id === 'openai' ? 'OpenAI' : 'Claude',
         apiKey: apiKey.trim()
-      });
+      };
+      updatedProviders.push(provider);
+      // Save to storage
+      credentialStorage.updateAIProvider(provider);
+    } else {
+      // Remove from storage
+      credentialStorage.removeAIProvider(id);
     }
     onProvidersChange(updatedProviders);
   };

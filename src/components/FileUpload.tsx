@@ -96,13 +96,40 @@ export const FileUpload: React.FC<FileUploadProps> = ({
                   </button>
                 </div>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <p className="text-lg font-semibold text-success-800">{selectedFile.name}</p>
-                <div className="flex justify-center">
+                <div className="flex justify-center items-center space-x-3">
                   <span className="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm border border-success-300 rounded-full text-sm font-medium text-success-700 shadow-inner-lg">
                     {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                   </span>
+                  {allowSaving && accept === '.json' && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSaveCredentials();
+                      }}
+                      className="flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-sm shadow-lg"
+                      title="Save credentials for future use"
+                    >
+                      <Save className="h-4 w-4" />
+                      <span>Save</span>
+                    </button>
+                  )}
                 </div>
+                {saveMessage && (
+                  <div className={`p-3 rounded-lg flex items-center justify-center space-x-2 text-sm transition-all duration-300 ${
+                    saveMessage.type === 'success' 
+                      ? 'bg-green-100 text-green-800 border border-green-200' 
+                      : 'bg-red-100 text-red-800 border border-red-200'
+                  }`}>
+                    {saveMessage.type === 'success' ? (
+                      <CheckCircle className="h-4 w-4" />
+                    ) : (
+                      <AlertCircle className="h-4 w-4" />
+                    )}
+                    <span>{saveMessage.text}</span>
+                  </div>
+                )}
               </div>
             </div>
           ) : (
