@@ -68,7 +68,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
             ? 'border-primary-400 bg-primary-50/80 shadow-glow scale-102' 
             : error 
               ? 'border-danger-400 bg-danger-50/80 shadow-lg' 
-              : selectedFile 
+              : selectedFiles.length > 0 
                 ? 'border-success-400 bg-success-50/80 shadow-lg' 
                 : 'border-gray-300 bg-white/50 hover:border-primary-300 hover:bg-primary-50/30 hover:shadow-lg hover:scale-101'
           }
