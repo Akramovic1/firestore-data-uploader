@@ -153,7 +153,6 @@ Return format: [{"field1": "value1", "field2": "value2"}, ...]`;
             content: prompt
           }
         ],
-        temperature: 0.7,
         max_completion_tokens: 4000
       });
 
@@ -313,7 +312,6 @@ Return ONLY a JSON array of enhanced field objects:
             content: prompt
           }
         ],
-        temperature: 0.3, // Lower temperature for more consistent field generation
         max_completion_tokens: 2000
       });
 
