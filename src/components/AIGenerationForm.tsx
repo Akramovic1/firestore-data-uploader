@@ -18,7 +18,7 @@ export const AIGenerationForm: React.FC<AIGenerationFormProps> = ({
   providers,
   onProvidersChange
 }) => {
-  const [count, setCount] = useState(10);
+  const [count, setCount] = useState(1);
   const [selectedProvider, setSelectedProvider] = useState<'openai' | 'claude'>('openai');
   const [customPrompt, setCustomPrompt] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
