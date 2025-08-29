@@ -153,7 +153,7 @@ Return format: [{"field1": "value1", "field2": "value2"}, ...]`;
             content: prompt
           }
         ],
-        max_completion_tokens: 4000
+        max_completion_tokens: 1000
       });
 
       console.log('OpenAI response:', JSON.stringify(response, null, 2));
@@ -164,7 +164,10 @@ Return format: [{"field1": "value1", "field2": "value2"}, ...]`;
       }
 
       const content = choice.message?.content;
-      if (!content) {
+      if (!content || content.trim() === '') {
+        if (choice.finish_reason === 'length') {
+          throw new Error('Response was cut off due to length limits. Try reducing the number of documents or using a shorter schema.');
+        }
         throw new Error(`No content received from OpenAI. Response: ${JSON.stringify(choice)}`);
       }
 
@@ -182,7 +185,7 @@ Return format: [{"field1": "value1", "field2": "value2"}, ...]`;
     try {
       const response = await this.anthropic.messages.create({
         model: 'claude-4-sonnet-20241022',
-        max_completion_tokens: 4000,
+        max_tokens: 1000,
         temperature: 0.7,
         messages: [
           {
@@ -319,7 +322,7 @@ Return ONLY a JSON array of enhanced field objects:
             content: prompt
           }
         ],
-        max_completion_tokens: 2000
+        max_tokens: 2000
       });
 
       console.log('OpenAI field generation response:', JSON.stringify(response, null, 2));
@@ -330,7 +333,10 @@ Return ONLY a JSON array of enhanced field objects:
       }
 
       const content = choice.message?.content;
-      if (!content) {
+      if (!content || content.trim() === '') {
+        if (choice.finish_reason === 'length') {
+          throw new Error('Response was cut off due to length limits. Try reducing the complexity of your request.');
+        }
         throw new Error(`No content received from OpenAI. Response: ${JSON.stringify(choice)}`);
       }
 
@@ -348,7 +354,7 @@ Return ONLY a JSON array of enhanced field objects:
     try {
       const response = await this.anthropic.messages.create({
         model: 'claude-4-sonnet-20241022',
-        max_completion_tokens: 2000,
+        max_tokens: 2000,
         temperature: 0.3,
         messages: [
           {
