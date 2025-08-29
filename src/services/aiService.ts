@@ -153,7 +153,7 @@ Return format: [{"field1": "value1", "field2": "value2"}, ...]`;
             content: prompt
           }
         ],
-        max_completion_tokens: 1000
+        max_completion_tokens: 2000
       });
 
       console.log('OpenAI response:', JSON.stringify(response, null, 2));
@@ -184,8 +184,8 @@ Return format: [{"field1": "value1", "field2": "value2"}, ...]`;
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-4-sonnet-20241022',
-        max_tokens: 1000,
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
         temperature: 0.7,
         messages: [
           {
@@ -353,7 +353,7 @@ Return ONLY a JSON array of enhanced field objects:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-4-sonnet-20241022',
+        model: 'claude-sonnet-4-20250514',
         max_tokens: 2000,
         temperature: 0.3,
         messages: [
