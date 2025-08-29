@@ -156,9 +156,16 @@ Return format: [{"field1": "value1", "field2": "value2"}, ...]`;
         max_completion_tokens: 4000
       });
 
-      const content = response.choices[0]?.message?.content;
+      console.log('OpenAI response:', JSON.stringify(response, null, 2));
+      
+      const choice = response.choices[0];
+      if (!choice) {
+        throw new Error('No choices in OpenAI response');
+      }
+
+      const content = choice.message?.content;
       if (!content) {
-        throw new Error('No content received from OpenAI');
+        throw new Error(`No content received from OpenAI. Response: ${JSON.stringify(choice)}`);
       }
 
       return this.parseGeneratedContent(content);
@@ -315,9 +322,16 @@ Return ONLY a JSON array of enhanced field objects:
         max_completion_tokens: 2000
       });
 
-      const content = response.choices[0]?.message?.content;
+      console.log('OpenAI field generation response:', JSON.stringify(response, null, 2));
+      
+      const choice = response.choices[0];
+      if (!choice) {
+        throw new Error('No choices in OpenAI response');
+      }
+
+      const content = choice.message?.content;
       if (!content) {
-        throw new Error('No content received from OpenAI');
+        throw new Error(`No content received from OpenAI. Response: ${JSON.stringify(choice)}`);
       }
 
       return content;
